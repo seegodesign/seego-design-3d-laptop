@@ -1,81 +1,95 @@
 import { useState } from 'react'
 
-const pages = {
-  home: {
-    eyebrow: 'Independent digital studio',
-    title: 'Small screens. Big ideas.',
-    body: 'We design playful, focused experiences for the web and the spaces around it.',
+const sections = {
+  Home: {
+    title: 'Custom web solutions for growing businesses',
+    body: 'Seego Design builds custom websites, apps, and digital tools for growing businesses that need to drive growth, streamline operations, and move from patchwork systems to clear next steps.',
+    accent: 'Built for teams that have outgrown the ordinary.',
   },
-  work: {
-    eyebrow: 'Selected work',
-    title: 'Made to be explored.',
-    body: 'Interfaces, identities, and interactive worlds built with equal parts clarity and character.',
+  About: {
+    title: 'Strategy and design working as one',
+    body: 'We pair clear business thinking with thoughtful digital design to create experiences that are useful, memorable, and ready to scale.',
+    accent: 'A practical partner for ambitious teams.',
   },
-  about: {
-    eyebrow: 'About the studio',
-    title: 'Curious by default.',
-    body: 'A tiny practice interested in thoughtful details, useful technology, and memorable digital places.',
+  Portfolio: {
+    title: 'Digital work built to move business forward',
+    body: 'Explore conversion-focused websites, product experiences, and custom platforms created for teams entering their next stage of growth.',
+    accent: 'Designed with purpose. Built for momentum.',
+  },
+  Services: {
+    title: 'From first idea to finished digital product',
+    body: 'Brand strategy, product design, web development, and ongoing optimization come together in one focused, collaborative process.',
+    accent: 'Everything needed to launch with confidence.',
+  },
+  Tools: {
+    title: 'Smarter tools for the way your team works',
+    body: 'We replace scattered processes with focused internal tools, useful automations, and digital systems shaped around your operation.',
+    accent: 'Less friction. More forward motion.',
+  },
+  Contact: {
+    title: 'Let’s build what your business needs next',
+    body: 'Tell us where you are headed, what is getting in the way, and what a successful next chapter looks like for your team.',
+    accent: 'A good conversation is the best place to start.',
   },
 }
 
-export default function ScreenWebsite() {
-  const [page, setPage] = useState('home')
-  const [message, setMessage] = useState('')
-  const content = pages[page]
+export default function ScreenWebsite({ visible = false }) {
+  const [section, setSection] = useState('Home')
+  const [brighter, setBrighter] = useState(false)
+  const content = sections[section]
 
   return (
-    <div className="screen-browser" onPointerDown={(event) => event.stopPropagation()}>
-      <header className="browser-bar">
-        <div className="window-controls" aria-hidden="true">
-          <span className="window-dot window-dot--red" />
-          <span className="window-dot window-dot--yellow" />
-          <span className="window-dot window-dot--green" />
-        </div>
-        <div className="address-bar">studio.local/{page === 'home' ? '' : page}</div>
-        <div className="browser-menu" aria-hidden="true">•••</div>
-      </header>
+    <div
+      className={`screen-browser${visible ? ' is-visible' : ''}`}
+      onPointerDown={(event) => event.stopPropagation()}
+    >
+      <div className={`seego-site${brighter ? ' is-brighter' : ''}`}>
+        <nav className="seego-nav" aria-label="Website navigation">
+          <button className="seego-logo" onClick={() => setSection('Home')} aria-label="Seego Design home">
+            <img src="/images/logo.svg" alt="Seego Design" />
+          </button>
 
-      <main className={`screen-site screen-site--${page}`}>
-        <nav className="screen-nav" aria-label="Laptop website navigation">
-          <button className="screen-wordmark" onClick={() => setPage('home')}>Seego Design</button>
-          <div className="screen-nav-links">
-            {Object.keys(pages).map((item) => (
+          <div className="seego-links">
+            {Object.keys(sections).map((item) => (
               <button
-                className={page === item ? 'is-active' : ''}
+                className={section === item ? 'is-active' : ''}
                 key={item}
-                onClick={() => setPage(item)}
+                onClick={() => setSection(item)}
               >
                 {item}
               </button>
             ))}
           </div>
+
+          <div className="seego-nav-actions">
+            <button
+              className="seego-theme"
+              onClick={() => setBrighter((value) => !value)}
+              aria-label="Toggle image brightness"
+            >
+              ☼
+            </button>
+            <button className="seego-book" onClick={() => setSection('Contact')}>Book a call</button>
+          </div>
         </nav>
 
-        <section className="screen-hero">
-          <div>
-            <p className="screen-eyebrow">{content.eyebrow}</p>
+        <main className="seego-hero">
+          <div className="seego-copy">
             <h1>{content.title}</h1>
-            <p className="screen-copy">{content.body}</p>
-          </div>
+            <p>{content.body}</p>
+            <strong>{content.accent}</strong>
 
-          <div className="screen-actions">
-            <button className="screen-primary" onClick={() => setPage(page === 'work' ? 'about' : 'work')}>
-              {page === 'work' ? 'Meet the studio' : 'Explore our work'}
-            </button>
-            <button
-              className="screen-secondary"
-              onClick={() => setMessage(message ? '' : 'Hello from inside the laptop 👋')}
-            >
-              Say hello
-            </button>
+            <div className="seego-ctas">
+              <button className="seego-primary" onClick={() => setSection('Contact')}>
+                Let&apos;s talk <span>→</span>
+              </button>
+              <button className="seego-secondary" onClick={() => setSection('Tools')}>
+                Explore tools
+              </button>
+            </div>
           </div>
-
-          <div className="screen-card" aria-live="polite">
-            <span>Currently</span>
-            <strong>{message || 'Building delightful things for the web.'}</strong>
-          </div>
-        </section>
-      </main>
+        </main>
+      </div>
     </div>
   )
 }

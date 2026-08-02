@@ -1,6 +1,6 @@
 :root {
   color: #111827;
-  background: #ffffff;
+  background: #07090d;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -26,7 +26,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   overflow: hidden;
-  background: #ffffff;
+  background: #07090d;
 }
 
 button,
@@ -56,202 +56,210 @@ select {
   width: 1024px;
   height: 720px;
   overflow: hidden;
-  border-radius: 18px;
-  background: #f4f0e8;
-  color: #171714;
+  border-radius: 14px;
+  background: #07121d;
+  color: #ffffff;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 24%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.35s cubic-bezier(0.22, 1, 0.36, 1);
   user-select: none;
 }
 
+.screen-browser.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .screen-browser button {
-  color: inherit;
+  font: inherit;
   border: 0;
   cursor: pointer;
 }
 
-.browser-bar {
-  display: grid;
-  grid-template-columns: 150px 1fr 150px;
-  align-items: center;
-  height: 64px;
-  padding: 0 22px;
-  background: #e8e3da;
-  border-bottom: 1px solid rgb(23 23 20 / 10%);
-}
-
-.window-controls {
-  display: flex;
-  gap: 10px;
-}
-
-.window-dot {
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-}
-
-.window-dot--red { background: #ff5f57; }
-.window-dot--yellow { background: #febc2e; }
-.window-dot--green { background: #28c840; }
-
-.address-bar {
-  justify-self: stretch;
-  padding: 10px 18px;
-  border: 1px solid rgb(23 23 20 / 9%);
-  border-radius: 10px;
-  background: rgb(255 255 255 / 58%);
-  color: #716d65;
-  font-size: 15px;
-  text-align: center;
-}
-
-.browser-menu {
-  justify-self: end;
-  color: #777269;
-  font-size: 18px;
-  letter-spacing: 3px;
-}
-
-.screen-site {
+.seego-site {
   position: relative;
-  min-height: 656px;
-  padding: 34px 44px 42px;
+  width: 100%;
+  height: 100%;
   background:
-    radial-gradient(circle at 82% 16%, rgb(255 188 104 / 70%), transparent 28%),
-    linear-gradient(135deg, #f7f3eb 0%, #e4efdc 100%);
+    linear-gradient(90deg, rgb(4 13 22 / 92%) 0%, rgb(4 13 22 / 75%) 48%, rgb(4 13 22 / 55%) 100%),
+    linear-gradient(0deg, rgb(4 13 22 / 38%), rgb(4 13 22 / 38%)),
+    url('/images/coastal-city-hero.png') center / cover no-repeat;
+  transition: filter 300ms ease;
 }
 
-.screen-site--work {
-  background:
-    radial-gradient(circle at 80% 12%, rgb(153 199 255 / 75%), transparent 30%),
-    linear-gradient(135deg, #f5f0e8 0%, #e9e0f7 100%);
+.seego-site.is-brighter {
+  filter: brightness(1.24);
 }
 
-.screen-site--about {
-  background:
-    radial-gradient(circle at 80% 12%, rgb(255 146 128 / 65%), transparent 30%),
-    linear-gradient(135deg, #f7f0e8 0%, #f3e3d2 100%);
-}
-
-.screen-nav {
-  display: flex;
+.seego-nav {
+  display: grid;
+  grid-template-columns: 250px 1fr 225px;
   align-items: center;
-  justify-content: space-between;
+  gap: 22px;
+  padding: 24px 28px 0;
 }
 
-.screen-wordmark,
-.screen-nav-links button {
+.seego-logo {
+  display: inline-flex;
+  align-items: center;
+  color: #fff;
   padding: 0;
   background: transparent;
+  text-align: left;
 }
 
-.screen-wordmark {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.04em;
+.seego-logo img {
+  display: block;
+  width: 225px;
+  height: auto;
 }
 
-.screen-nav-links {
+.seego-links {
   display: flex;
-  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
-.screen-nav-links button {
-  padding: 9px 15px;
-  border-radius: 999px;
-  font-size: 15px;
-  text-transform: capitalize;
+.seego-links button {
+  position: relative;
+  padding: 12px 9px;
+  background: transparent;
+  color: rgb(255 255 255 / 66%);
+  font-size: 13px;
+  font-weight: 600;
 }
 
-.screen-nav-links button:hover,
-.screen-nav-links button.is-active {
-  background: #171714;
+.seego-links button::after {
+  position: absolute;
+  right: 9px;
+  bottom: 4px;
+  left: 9px;
+  height: 2px;
+  background: #91d21f;
+  content: '';
+  opacity: 0;
+  transform: scaleX(0.35);
+  transition: 180ms ease;
+}
+
+.seego-links button:hover,
+.seego-links button.is-active {
   color: #fff;
 }
 
-.screen-hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 290px;
-  align-content: center;
-  gap: 26px 48px;
-  min-height: 540px;
+.seego-links button.is-active::after {
+  opacity: 1;
+  transform: scaleX(1);
 }
 
-.screen-eyebrow {
-  margin: 0 0 18px;
-  color: #706b62;
-  font-size: 15px;
-  font-weight: 700;
+.seego-nav-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.seego-theme {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid rgb(255 255 255 / 30%) !important;
+  border-radius: 50%;
+  background: rgb(4 13 22 / 28%);
+  color: #fff;
+  font-size: 25px;
+}
+
+.seego-book {
+  min-width: 145px;
+  padding: 14px 16px;
+  border: 1px solid #8bcf29 !important;
+  border-radius: 999px;
+  background: #5b981b;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
-.screen-hero h1 {
-  max-width: 620px;
-  margin: 0;
-  font-size: 76px;
-  line-height: 0.93;
-  letter-spacing: -0.075em;
-}
-
-.screen-copy {
-  max-width: 570px;
-  margin: 26px 0 0;
-  color: #565249;
-  font-size: 21px;
-  line-height: 1.45;
-}
-
-.screen-actions {
-  display: flex;
-  align-self: end;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.screen-actions button {
-  padding: 17px 22px;
-  border-radius: 14px;
-  font-size: 16px;
-  font-weight: 750;
-  text-align: left;
-}
-
-.screen-primary {
-  background: #171714;
-  color: #fff !important;
-}
-
-.screen-primary:hover {
-  background: #35352f;
-}
-
-.screen-secondary {
-  background: rgb(255 255 255 / 55%);
-  box-shadow: inset 0 0 0 1px rgb(23 23 20 / 12%);
-}
-
-.screen-card {
-  grid-column: 1 / -1;
+.seego-hero {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  min-height: 72px;
-  padding: 18px 22px;
-  border-radius: 16px;
-  background: rgb(255 255 255 / 46%);
-  box-shadow: inset 0 0 0 1px rgb(23 23 20 / 10%);
+  min-height: 615px;
+  padding: 54px 88px 42px;
 }
 
-.screen-card span {
-  color: #777269;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+.seego-copy {
+  max-width: 760px;
+}
+
+.seego-copy h1 {
+  margin: 0;
+  color: #fff;
+  font-size: 57px;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.seego-copy > p {
+  max-width: 655px;
+  margin: 28px 0 0;
+  color: rgb(255 255 255 / 69%);
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.seego-copy > strong {
+  display: block;
+  margin-top: 32px;
+  color: #91d21f;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.seego-ctas {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 34px;
+}
+
+.seego-ctas button {
+  min-width: 160px;
+  padding: 15px 22px;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
-.screen-card strong {
-  font-size: 17px;
+.seego-primary {
+  background: #5b981b;
+}
+
+.seego-primary span {
+  margin-left: 12px;
+  font-size: 19px;
+}
+
+.seego-secondary {
+  border: 1px solid rgb(255 255 255 / 45%) !important;
+  background: rgb(5 15 24 / 20%);
+}
+
+.seego-book:hover,
+.seego-primary:hover {
+  background: #72b522;
+}
+
+.seego-secondary:hover,
+.seego-theme:hover {
+  background: rgb(255 255 255 / 13%);
 }
