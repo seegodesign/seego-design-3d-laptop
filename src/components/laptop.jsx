@@ -7,7 +7,7 @@ import ScreenWebsite from './ScreenWebsite'
 // At the original surface position the two depth buffers competed and flickered.
 const SCREEN_CENTER = [-1.069646, 0.038, -0.803881]
 
-export default function Laptop({ websiteVisible = false }) {
+export default function Laptop({ websiteVisible = false, lowPower = false }) {
   const { scene } = useGLTF('/models/MacBookPro_blend.glb')
   const laptop = useMemo(() => {
     const clone = scene.clone(true)
@@ -29,7 +29,7 @@ export default function Laptop({ websiteVisible = false }) {
       {topPart && createPortal(
         <Html
           transform
-          occlude="blending"
+          occlude={lowPower ? true : 'blending'}
           position={SCREEN_CENTER}
           rotation={[Math.PI / 2, 0, Math.PI]}
           distanceFactor={0.795}

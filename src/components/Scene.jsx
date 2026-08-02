@@ -1,8 +1,9 @@
-import { Suspense, useRef, useState } from 'react'
+import { Component, Suspense, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import { MathUtils } from 'three'
 import Laptop from './laptop'
+import ScreenWebsite from './ScreenWebsite'
 
 const INTRO_DURATION = 3
 const INTRO_START_ANGLE = -2.72
@@ -15,6 +16,34 @@ const INTRO_START = [
   -Math.cos(INTRO_START_ANGLE) * INTRO_START_RADIUS,
 ]
 const CAMERA_Y = 2
+
+function prefersLowPowerRendering() {
+  const isTouchDevice = window.matchMedia('(pointer: coarse)').matches
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+    || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+
+  return isTouchDevice || isIOS
+}
+
+function WebGLFallback() {
+  return (
+    <div className="webgl-fallback">
+      <ScreenWebsite visible />
+    </div>
+  )
+}
+
+class CanvasErrorBoundary extends Component {
+  state = { failed: false }
+
+  static getDerivedStateFromError() {
+    return { failed: true }
+  }
+
+  render() {
+    return this.state.failed ? this.props.fallback : this.props.children
+  }
+}
 
 function CameraIntro({ onComplete }) {
   const elapsed = useRef(0)
@@ -66,19 +95,25 @@ function Desk() {
 
 export default function Scene() {
   const [introComplete, setIntroComplete] = useState(false)
+  const [webglFailed, setWebglFailed] = useState(false)
+  const lowPower = useMemo(prefersLowPowerRendering, [])
+
+  if (webglFailed) return <WebGLFallback />
 
   return (
     <div className="scene">
-      <Canvas
-        dpr={[1, 1.5]}
-        camera={{ position: INTRO_START, fov: 35, near: 0.1, far: 100 }}
-        onCreated={({ camera, gl }) => {
-          camera.lookAt(0, 0, 0)
-          gl.toneMappingExposure = 0.95
-        }}
-        shadows
-        gl={{ antialias: true, alpha: false }}
-      >
+      <CanvasErrorBoundary fallback={<WebGLFallback />}>
+        <Canvas
+          dpr={lowPower ? 1 : [1, 1.5]}
+          camera={{ position: INTRO_START, fov: 35, near: 0.1, far: 100 }}
+          onCreated={({ camera, gl }) => {
+            camera.lookAt(0, 0, 0)
+            gl.toneMappingExposure = 0.95
+            gl.domElement.addEventListener('webglcontextlost', () => setWebglFailed(true), { once: true })
+          }}
+          shadows={!lowPower}
+          gl={{ antialias: !lowPower, alpha: false, powerPreference: 'high-performance' }}
+        >
         <color attach="background" args={["#07090d"]} />
         <ambientLight intensity={0.28} color="#8290ad" />
         <spotLight
@@ -89,8 +124,8 @@ export default function Scene() {
           distance={14}
           decay={2}
           color="#ffd3a1"
-          castShadow
-          shadow-mapSize={[2048, 2048]}
+          castShadow={!lowPower}
+          shadow-mapSize={lowPower ? [512, 512] : [2048, 2048]}
           shadow-bias={-0.0002}
         />
         <directionalLight position={[3, 1.5, 2]} intensity={0.55} color="#8197c5" />
@@ -110,7 +145,7 @@ export default function Scene() {
         />
         <Desk />
         <Suspense fallback={<LoadingFallback />}>
-          <Laptop websiteVisible={introComplete} />
+          <Laptop websiteVisible={introComplete} lowPower={lowPower} />
           <CameraIntro onComplete={() => setIntroComplete(true)} />
         </Suspense>
         <OrbitControls
@@ -123,7 +158,8 @@ export default function Scene() {
           maxPolarAngle={Math.PI / 2 - 0.05}
           target={[0, 0, 0]}
         />
-      </Canvas>
+        </Canvas>
+      </CanvasErrorBoundary>
     </div>
   )
 }
